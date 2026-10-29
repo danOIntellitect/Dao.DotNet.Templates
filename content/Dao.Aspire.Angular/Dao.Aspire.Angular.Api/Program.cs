@@ -1,5 +1,6 @@
 #if (IncludeSignalR)
 using Dao.Aspire.Angular.Api.Hubs;
+using Microsoft.AspNetCore.SignalR;
 #endif
 
 var builder = WebApplication.CreateBuilder(args);

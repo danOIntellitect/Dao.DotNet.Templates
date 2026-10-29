@@ -2,11 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:material="using:Material.Styles.Themes"
              x:Class="Dao.Aspire.Avalonia.Desktop.App">
-  <Application.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <material:MaterialTheme BaseTheme="Light" PrimaryColor="Green" SecondaryColor="Teal" />
-      </ResourceDictionary.MergedDictionaries>
-    </ResourceDictionary>
-  </Application.Resources>
+  <Application.Styles>
+    <material:MaterialTheme BaseTheme="Light" PrimaryColor="Green" SecondaryColor="Teal" />
+  </Application.Styles>
 </Application>

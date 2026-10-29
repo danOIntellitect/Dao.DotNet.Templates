@@ -1,3 +1,4 @@
+using Dao.Aspire.Mcp.Shared;
 #if IncludeDatabase
 using Dao.Aspire.Mcp.Data;
 #endif
@@ -67,7 +68,7 @@ var authBuilder = builder
                     azureAdOptions.Audience
                     ?? throw new InvalidOperationException("Audience is required"),
                 ValidateIssuer = true,
-                ValidIssuer = $"{azureAdOptions.Instance}/{azureAdOptions.TenantId}/v2.0",
+                ValidIssuer = $"{azureAdOptions.Instance.TrimEnd('/')}/{azureAdOptions.TenantId}/v2.0",
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 ClockSkew = TimeSpan.FromMinutes(5),
@@ -117,7 +118,9 @@ builder
     {
         options.ServerInfo = new() { Name = "MCP Templates", Version = "0.7.0" };
     })
+#if IncludeAuthentication
     .AddAuthorizationFilters()
+#endif
     .WithHttpTransport(options =>
     {
         options.Stateless = true;
@@ -168,3 +171,5 @@ await Dao.Aspire.Mcp.Data.DbInitializer.InitializeAsync(app.Services, seedData: 
 #endif
 
 app.Run();
+
+public partial class Program;

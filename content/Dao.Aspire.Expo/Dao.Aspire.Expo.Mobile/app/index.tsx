@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { getWeatherForecast, WeatherForecast } from '../src/services/api.service';
+import { getWeatherForecast, type WeatherForecast } from '../src/services/api.service';
 
 export default function HomeScreen() {
   const [forecasts, setForecasts] = useState<WeatherForecast[]>([]);

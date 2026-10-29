@@ -54,7 +54,10 @@
             "**/.vs/**",
             "**/.vscode/**",
             "**/.azure/**",
-            "**/node_modules/**"
+            "**/node_modules/**",
+            "**/.angular/**",
+            "**/dist/**",
+            "**/coverage/**"
           ]
         }
       ]

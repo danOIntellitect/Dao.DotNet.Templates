@@ -8,7 +8,8 @@ var frontend = builder.AddJavaScriptApp("frontend", "../Dao.Aspire.Angular.Web")
     .WithRunScript("start")
     .WithReference(api)
     .WaitFor(api)
-    .WithHttpEndpoint(targetPort: 4200, env: "PORT");
+    .WithHttpEndpoint(env: "PORT")
+    .WithHttpHealthCheck("/");
 
 api.PublishWithContainerFiles(frontend, "wwwroot");
 

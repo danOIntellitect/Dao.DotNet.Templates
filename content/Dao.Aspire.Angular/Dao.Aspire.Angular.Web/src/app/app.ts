@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { WeatherComponent } from './weather/weather.component';
 //#if (IncludeSignalR)
@@ -13,6 +13,7 @@ import { NotificationBadgeComponent } from './signalr/notification-badge.compone
 //#endif
   ],
   templateUrl: './app.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.scss'
 })
 export class App {

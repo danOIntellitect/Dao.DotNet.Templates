@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { SignalrService } from './signalr.service';
 
 @Component({
@@ -21,6 +21,7 @@ import { SignalrService } from './signalr.service';
       }
     </aside>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: `
     .notification-badge {
       position: fixed;

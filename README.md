@@ -41,6 +41,18 @@ Full-featured .NET Aspire application with Model Context Protocol server and Bla
 
 For detailed information about each template, see the README in the respective template directory.
 
+## Validate templates
+
+The regression harness packs and installs the template package in an isolated hive, generates all six templates, builds them, runs their unit and frontend tests, and exercises the generated apps with browser and API integration tests:
+
+```powershell
+pwsh -NoProfile -File tests/Test-Templates.ps1 -Stage Test
+```
+
+This requires the .NET 10 SDK, Node.js 24, PowerShell 7, Chromium (installed by the script), and Docker for the SQL and Data API Builder integration tests. On Windows, the test stage also runs the Avalonia headless UI tests. To generate every combination of the MCP template's boolean options, add `-AllCombinations`.
+
+Trust the HTTPS development certificate with `dotnet dev-certs https --trust` before running the integration tests. On Linux, first include `$HOME/.aspnet/dev-certs/trust` in `SSL_CERT_DIR`, preserving the system certificate directories (for example, `$HOME/.aspnet/dev-certs/trust:/usr/lib/ssl/certs`), then run the trust command. The trust command itself checks this variable and fails with partial trust if it is not configured. The CI workflow configures this trust without disabling certificate validation.
+
 ## License
 
 See [LICENSE.txt](LICENSE.txt)

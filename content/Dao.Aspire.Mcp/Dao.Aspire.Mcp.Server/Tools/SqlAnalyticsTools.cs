@@ -18,7 +18,9 @@ namespace Dao.Aspire.Mcp.Server.Tools;
 /// - Structured DTOs for LLM-friendly responses
 /// </summary>
 [McpServerToolType]
+#if IncludeAuthentication
 [Authorize]
+#endif
 public class SqlAnalyticsTools(
     AppDbContext context,
     IHttpContextAccessor httpContextAccessor,
@@ -60,7 +62,9 @@ public class SqlAnalyticsTools(
             "Retrieve sales analytics aggregated by region with date range filtering. Returns total orders, revenue, average order value, and top products per region."
         )
     ]
+#if RequireAuthForRoles
     [Authorize(Policy = Policies.DataAnalyst)]
+#endif
     public async Task<SalesAnalyticsResponse> GetSalesAnalyticsByRegion(
         [Description("Start date in YYYY-MM-DD format")] string startDate,
         [Description("End date in YYYY-MM-DD format")] string endDate,
@@ -172,7 +176,9 @@ public class SqlAnalyticsTools(
             "Analyze current inventory levels and sales trends to identify products that need reordering. Returns products with low stock relative to sales velocity."
         )
     ]
+#if RequireAuthForRoles
     [Authorize(Roles = Roles.Developers)]
+#endif
     public async Task<InventoryProjectionResponse> GetInventoryProjections(
         [Description("Optional: Product category to analyze. Leave empty for all categories.")]
             string? category = null,

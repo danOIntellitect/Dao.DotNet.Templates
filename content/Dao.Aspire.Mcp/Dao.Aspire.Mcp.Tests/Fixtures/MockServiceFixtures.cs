@@ -1,7 +1,9 @@
 using System.Security.Claims;
+#if IncludeDatabase
 using Dao.Aspire.Mcp.Data;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+#endif
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 
@@ -13,6 +15,7 @@ namespace Dao.Aspire.Mcp.Tests.Fixtures;
 /// </summary>
 public static class MockServiceFixtures
 {
+#if IncludeDatabase
     /// <summary>
     /// Creates an in-memory AppDbContext with test data seeded.
     /// Each call uses a unique database name for test isolation.
@@ -29,6 +32,7 @@ public static class MockServiceFixtures
         SeedTestData(context);
         return context;
     }
+#endif
 
     /// <summary>
     /// Creates a mock IHttpContextAccessor with the specified claims.
@@ -87,6 +91,7 @@ public static class MockServiceFixtures
         return Substitute.For<ILogger<T>>();
     }
 
+#if IncludeDatabase
     private static void SeedTestData(AppDbContext context)
     {
         var users = new[]
@@ -210,4 +215,5 @@ public static class MockServiceFixtures
         context.OrderItems.AddRange(orderItems);
         context.SaveChanges();
     }
+#endif
 }
