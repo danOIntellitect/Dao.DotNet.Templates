@@ -21,7 +21,7 @@ public partial class RuntimeTests
         var resource = Assert.IsAssignableFrom<ContainerResource>(builder.Resources.Single(r => r.Name == "dab-mcp"));
         var dab = builder.CreateResourceBuilder(resource)
             .WithEnvironment("APPLICATIONINSIGHTS_CONNECTION_STRING", "");
-        var source = Path.Combine(Path.GetDirectoryName(Projects.SmokeSql_AppHost.ProjectPath)!, "dab-config.json");
+        var source = Path.Combine(Projects.SmokeSql_AppHost.ProjectPath, "dab-config.json");
         var testConfig = source + $".{Guid.NewGuid():N}.test.json";
         try
         {
@@ -38,7 +38,7 @@ public partial class RuntimeTests
             using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
             await app.ResourceNotifications.WaitForResourceHealthyAsync("dab-mcp", cts.Token);
             using var http = app.CreateHttpClient("dab-mcp", "http");
-            using var health = await http.GetAsync("/health", cts.Token);
+            using var health = await http.GetAsync("/", cts.Token);
             health.EnsureSuccessStatusCode();
             if (!simulatedIdentity)
             {

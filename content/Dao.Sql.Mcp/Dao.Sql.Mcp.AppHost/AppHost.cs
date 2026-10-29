@@ -28,7 +28,7 @@ var dabMcpServer = builder
     .WithEnvironment("MSSQL_CONNECTION_STRING", db)
     .WithEnvironment("APPLICATIONINSIGHTS_CONNECTION_STRING", insights)
     .WaitForCompletion(dbInit)
-    .WithHttpHealthCheck("/health")
+    .WithHttpHealthCheck("/")
     .WithUrls(x =>
     {
         x.Urls.Add(

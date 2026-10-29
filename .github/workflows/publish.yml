@@ -23,6 +23,11 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Trust HTTPS development certificate
+        run: |
+          dotnet dev-certs https --trust
+          echo "SSL_CERT_DIR=$HOME/.aspnet/dev-certs/trust:/usr/lib/ssl/certs${SSL_CERT_DIR:+:$SSL_CERT_DIR}" >> "$GITHUB_ENV"
+
       - name: Generate and test all templates
         run: pwsh -NoProfile -File tests/Test-Templates.ps1 -Stage Test
 
