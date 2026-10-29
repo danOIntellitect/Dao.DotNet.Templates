@@ -43,7 +43,7 @@ function Assert-GeneratedProject {
             if ($content.Contains($SourceName)) {
                 throw "Source name was not replaced in $($file.FullName)."
             }
-            if ($content -match '(?m)^\s*(#if|//#if|<!--#if).*(Include|Require)') {
+            if ($content -match '(?m)^\s*(#if|//#if|<!--#if).*(Include|Require|Google|MSAL)') {
                 throw "Unprocessed template condition in $($file.FullName)."
             }
         }
@@ -100,6 +100,34 @@ foreach ($definition in $definitions | Where-Object { $_.Key -in $Templates }) {
 
 if ('Angular' -in $Templates) {
     $outputs.Add((New-SmokeProject 'dao-aspire-angular' 'SmokeSignalR' 'Dao.Aspire.Angular' @('--IncludeSignalR', 'true')))
+    foreach ($auth in @('GoogleCookie', 'GoogleJwt', 'MSAL')) {
+        foreach ($signalR in @($false, $true)) {
+            $name = "Smoke$auth$(if ($signalR) { 'SignalR' })"
+            $destination = New-SmokeProject 'dao-aspire-angular' $name 'Dao.Aspire.Angular' @(
+                '--Auth', $auth, '--IncludeSignalR', $signalR.ToString().ToLowerInvariant())
+            $outputs.Add($destination)
+            $manifestPath = Join-Path $destination "$name.Web\package.json"
+            $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+            $lock = Get-Content (Join-Path $destination "$name.Web\package-lock.json") -Raw | ConvertFrom-Json -AsHashtable
+            if ($manifest.dependencies.'oidc-client-ts' -and $auth -ne 'GoogleJwt') {
+                throw "OIDC client leaked into $auth output."
+            }
+            if ($manifest.dependencies.'@azure/msal-angular' -and $auth -ne 'MSAL') {
+                throw "MSAL leaked into $auth output."
+            }
+            foreach ($dependency in $manifest.dependencies.PSObject.Properties) {
+                if ($lock.packages[''].dependencies[$dependency.Name] -ne $dependency.Value) {
+                    throw "Manifest/lockfile mismatch for $($dependency.Name) in $name."
+                }
+            }
+            if (Test-Path (Join-Path $destination 'auth-assets')) {
+                throw "Template-only auth assets leaked into $name."
+            }
+            if (-not (Test-Path (Join-Path $destination 'docs\authentication.md'))) {
+                throw "Missing provider setup documentation in $name."
+            }
+        }
+    }
 }
 
 if ('Mcp' -in $Templates) {
@@ -144,6 +172,7 @@ foreach ($destination in $outputs) {
     }
 }
 
+$generatedRootArgument = "-p:GeneratedRoot=$generated"
 if ($Stage -eq 'Test' -and $IsWindows) {
     $desktopDirectory = Join-Path $PSScriptRoot 'Template.DesktopTests'
     $desktopProject = Join-Path $desktopDirectory 'Template.DesktopTests.csproj'
@@ -153,9 +182,10 @@ if ($Stage -eq 'Test' -and $IsWindows) {
 }
 
 if ($Stage -eq 'Test') {
+    $authenticationProject = Join-Path $PSScriptRoot 'Template.AuthenticationTests\Template.AuthenticationTests.csproj'
+    Invoke-Checked dotnet @('test', $authenticationProject, '-c', 'Release', $generatedRootArgument)
     $integrationDirectory = Join-Path $PSScriptRoot 'Template.IntegrationTests'
     $integrationProject = Join-Path $integrationDirectory 'Template.IntegrationTests.csproj'
-    $generatedRootArgument = "-p:GeneratedRoot=$generated"
     Invoke-Checked dotnet @('build', $integrationProject, '-c', 'Release', $generatedRootArgument,
         '-p:EnableWindowsTargeting=true')
 

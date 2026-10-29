@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/.angular/
+**/dist/
+**/coverage/
+**/.certificates/
+**/authentication.db
+**/authentication.db-shm
+**/authentication.db-wal
+**/*.pfx
+**/*.key

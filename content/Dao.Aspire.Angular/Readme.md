@@ -18,6 +18,15 @@ This template uses **Model 1: Backend serves frontend** from the [Aspire JS depl
 
 ## Getting Started
 
+<!--#if (IncludeAuthentication)-->
+## Authentication
+
+This project includes authentication for Angular and the API. **Complete
+[the authentication setup guide](docs/authentication.md) before running it.**
+The guide covers provider registration, credentials, local HTTPS callbacks,
+sign-in/sign-out, and production deployment requirements.
+<!--#endif-->
+
 ### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)

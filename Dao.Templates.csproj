@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**;content\**\node_modules\**;content\**\.angular\**;content\**\.expo\**;content\**\dist\**;content\**\coverage\**" />
+    <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**;content\**\node_modules\**;content\**\.angular\**;content\**\.expo\**;content\**\dist\**;content\**\coverage\**;content\**\.certificates\**;content\**\authentication.db*;content\**\*.pfx;content\**\*.key" />
     <Compile Remove="**\*" />
   </ItemGroup>
 

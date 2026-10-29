@@ -24,6 +24,11 @@ Full-featured .NET Aspire application with Model Context Protocol server and Bla
 
 **Options:**
 - `--IncludeSignalR true` — adds a `NotificationHub` to the API and a live notification badge service + component to the Angular app (proxied via `/hubs` with WebSocket support).
+- `--Auth None|GoogleCookie|GoogleJwt|MSAL` — selects authentication for both Angular and the API; defaults to `None`. `GoogleCookie` uses a secure server session without a database. `GoogleJwt` adds Identity, OpenIddict, and SQLite for application-issued JWTs and refresh tokens. `MSAL` uses single-tenant Microsoft Entra with separate SPA/API registrations. Each authenticated project includes `docs/authentication.md` with provider registration, local HTTPS, secrets, and production setup instructions. All choices work with optional SignalR.
+
+```powershell
+dotnet new dao-aspire-angular -n MyApp --Auth GoogleJwt --IncludeSignalR true
+```
 
 ## .NET Aspire with EF (`dao-aspire-ef`)
 

@@ -7,13 +7,26 @@ module.exports = {
   '/api': {
     target: apiUrl,
     secure: false,
+//#if (IncludeAuthentication)
+    changeOrigin: false,
+//#else
     changeOrigin: true,
+//#endif
   },
+//#if (IncludeAuthentication)
+  '/signin-google': { target: apiUrl, secure: false, changeOrigin: false },
+  '/connect': { target: apiUrl, secure: false, changeOrigin: false },
+  '/.well-known': { target: apiUrl, secure: false, changeOrigin: false },
+//#endif
 //#if (IncludeSignalR)
   '/hubs': {
     target: apiUrl,
     secure: false,
+//#if (IncludeAuthentication)
+    changeOrigin: false,
+//#else
     changeOrigin: true,
+//#endif
     ws: true,
   },
 //#endif

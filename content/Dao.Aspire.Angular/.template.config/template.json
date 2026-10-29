@@ -12,6 +12,38 @@
   "sourceName": "Dao.Aspire.Angular",
   "preferNameDirectory": true,
   "symbols": {
+    "Auth": {
+      "type": "parameter",
+      "datatype": "choice",
+      "description": "Authentication for Angular and the API. See the generated docs/authentication.md for provider setup.",
+      "defaultValue": "None",
+      "choices": [
+        { "choice": "None", "description": "No authentication." },
+        { "choice": "GoogleCookie", "description": "Google sign-in with an HttpOnly application session cookie." },
+        { "choice": "GoogleJwt", "description": "Google sign-in with Identity, OpenIddict JWTs, and SQLite persistence." },
+        { "choice": "MSAL", "description": "Single-tenant Microsoft Entra sign-in with MSAL and a protected API." }
+      ]
+    },
+    "IncludeAuthentication": {
+      "type": "computed",
+      "value": "(Auth != \"None\")"
+    },
+    "GoogleCookie": {
+      "type": "computed",
+      "value": "(Auth == \"GoogleCookie\")"
+    },
+    "GoogleJwt": {
+      "type": "computed",
+      "value": "(Auth == \"GoogleJwt\")"
+    },
+    "MSAL": {
+      "type": "computed",
+      "value": "(Auth == \"MSAL\")"
+    },
+    "Google": {
+      "type": "computed",
+      "value": "(GoogleCookie || GoogleJwt)"
+    },
     "IncludeSignalR": {
       "type": "parameter",
       "datatype": "bool",
@@ -20,6 +52,22 @@
     }
   },
   "specialCustomOperations": {
+    "**/*.js": {
+      "operations": [
+        {
+          "type": "conditional",
+          "configuration": {
+            "if": ["//#if"],
+            "else": ["//#else"],
+            "elseif": ["//#elseif"],
+            "endif": ["//#endif"],
+            "evaluator": "C++",
+            "trim": true,
+            "wholeLine": true
+          }
+        }
+      ]
+    },
     "**/*.ts": {
       "operations": [
         {
@@ -41,6 +89,47 @@
     {
       "modifiers": [
         {
+          "exclude": ["auth-assets/**"]
+        },
+        {
+          "condition": "(IncludeAuthentication)",
+          "exclude": ["Dao.Aspire.Angular.Web/package.json"]
+        },
+        {
+          "condition": "(GoogleJwt || MSAL)",
+          "exclude": ["Dao.Aspire.Angular.Web/package-lock.json"]
+        },
+        {
+          "condition": "(!IncludeAuthentication)",
+          "exclude": [
+            "Dao.Aspire.Angular.Api/Authentication/**",
+            "Dao.Aspire.Angular.Web/src/app/auth/**",
+            "Dao.Aspire.Angular.Web/scripts/**",
+            "docs/**"
+          ]
+        },
+        {
+          "condition": "(!GoogleCookie)",
+          "exclude": [
+            "Dao.Aspire.Angular.Api/Authentication/GoogleCookie/**",
+            "Dao.Aspire.Angular.Web/src/app/auth/cookie-provider.ts"
+          ]
+        },
+        {
+          "condition": "(!GoogleJwt)",
+          "exclude": [
+            "Dao.Aspire.Angular.Api/Authentication/GoogleJwt/**",
+            "Dao.Aspire.Angular.Web/src/app/auth/jwt-provider.ts"
+          ]
+        },
+        {
+          "condition": "(!MSAL)",
+          "exclude": [
+            "Dao.Aspire.Angular.Api/Authentication/Entra/**",
+            "Dao.Aspire.Angular.Web/src/app/auth/msal-provider.ts"
+          ]
+        },
+        {
           "condition": "(!IncludeSignalR)",
           "exclude": [
             "Dao.Aspire.Angular.Api/Hubs/**",
@@ -57,10 +146,29 @@
             "**/node_modules/**",
             "**/.angular/**",
             "**/dist/**",
-            "**/coverage/**"
+            "**/coverage/**",
+            "**/.certificates/**",
+            "**/authentication.db*",
+            "**/*.pfx",
+            "**/*.key"
           ]
         }
       ]
+    },
+    {
+      "source": "auth-assets/GoogleCookie",
+      "target": "Dao.Aspire.Angular.Web",
+      "condition": "(GoogleCookie)"
+    },
+    {
+      "source": "auth-assets/GoogleJwt",
+      "target": "Dao.Aspire.Angular.Web",
+      "condition": "(GoogleJwt)"
+    },
+    {
+      "source": "auth-assets/MSAL",
+      "target": "Dao.Aspire.Angular.Web",
+      "condition": "(MSAL)"
     }
   ]
 }

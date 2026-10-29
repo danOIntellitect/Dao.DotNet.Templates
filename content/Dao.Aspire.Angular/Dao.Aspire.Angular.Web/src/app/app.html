@@ -350,11 +350,33 @@
     </div>
   </div>
 
+<!--#if (IncludeAuthentication)-->
+  <section aria-label="Authentication">
+    @if (auth.error()) {
+      <p role="alert">{{ auth.error() }}</p>
+    }
+    @if (auth.user(); as user) {
+      <p>Signed in as {{ user.name || user.id }}</p>
+      <button type="button" (click)="auth.logout()">Sign out</button>
+      <app-weather />
+    } @else {
+      <p>Sign in to view the protected weather forecast.</p>
+      <button type="button" (click)="auth.login()">Sign in</button>
+    }
+  </section>
+<!--#else-->
   <app-weather />
+<!--#endif-->
 </main>
 
 <!--#if (IncludeSignalR)-->
+<!--#if (IncludeAuthentication)-->
+@if (auth.user()) {
+<!--#endif-->
 <app-notification-badge />
+<!--#if (IncludeAuthentication)-->
+}
+<!--#endif-->
 <!--#endif-->
 
 <router-outlet />

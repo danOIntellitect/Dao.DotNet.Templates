@@ -1,3 +1,6 @@
+#if (IncludeAuthentication)
+using Dao.Aspire.Angular.Api.Authentication;
+#endif
 #if (IncludeSignalR)
 using Dao.Aspire.Angular.Api.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -7,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 builder.Services.AddOpenApi();
+#if (IncludeAuthentication)
+builder.AddTemplateAuthentication();
+#endif
 
 #if (IncludeSignalR)
 builder.Services.AddSignalR();
@@ -25,6 +31,10 @@ builder.Services.AddCors(options =>
 #endif
 
 var app = builder.Build();
+#if (IncludeAuthentication)
+await app.InitializeTemplateAuthenticationAsync();
+app.UseForwardedHeaders();
+#endif
 
 if (app.Environment.IsDevelopment())
 {
@@ -34,8 +44,16 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 #if (IncludeSignalR)
 app.UseCors();
+#if (GoogleCookie)
+app.UseWebSockets();
+#endif
 #endif
 app.UseStaticFiles();
+#if (IncludeAuthentication)
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapTemplateAuthentication();
+#endif
 
 app.MapDefaultEndpoints();
 
@@ -56,10 +74,17 @@ app.MapGet("/api/weatherforecast", () =>
         .ToArray();
     return forecast;
 })
+#if (IncludeAuthentication)
+.RequireAuthorization("api")
+#endif
 .WithName("GetWeatherForecast");
 
 #if (IncludeSignalR)
-app.MapHub<NotificationHub>("/hubs/notifications");
+app.MapHub<NotificationHub>("/hubs/notifications")
+#if (IncludeAuthentication)
+    .RequireAuthorization("api")
+#endif
+    ;
 
 // Test endpoint: POST /api/notify?message=hello  — broadcasts to all SignalR clients
 app.MapPost("/api/notify", async (string message, IHubContext<NotificationHub, INotificationHubClient> hub) =>
@@ -67,6 +92,9 @@ app.MapPost("/api/notify", async (string message, IHubContext<NotificationHub, I
     await hub.Clients.All.ReceiveNotification(message);
     return Results.Ok(new { sent = message });
 })
+#if (IncludeAuthentication)
+.RequireAuthorization("api")
+#endif
 .WithName("SendNotification");
 #endif
 
@@ -78,3 +106,5 @@ internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
+
+public partial class Program;

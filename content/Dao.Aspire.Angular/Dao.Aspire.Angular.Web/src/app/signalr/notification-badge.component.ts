@@ -7,6 +7,11 @@ import { SignalrService } from './signalr.service';
   template: `
     <aside class="notification-badge">
       <span class="badge-label">Live Notifications</span>
+//#if (IncludeAuthentication)
+      @if (service.error()) {
+        <p role="alert">{{ service.error() }}</p>
+      }
+//#endif
       @if (service.notifications().length > 0) {
         <span class="badge-count">{{ service.notifications().length }}</span>
       }

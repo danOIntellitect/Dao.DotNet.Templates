@@ -1,11 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-//#if (IncludeSignalR)
+//#if (IncludeSignalR || IncludeAuthentication)
 import { signal } from '@angular/core';
+//#endif
+//#if (IncludeSignalR)
 import { SignalrService } from './signalr/signalr.service';
 //#endif
 import { App } from './app';
+//#if (IncludeAuthentication)
+import { AuthService } from './auth/auth.service';
+//#endif
 
 describe('App', () => {
   beforeEach(async () => {
@@ -14,8 +19,16 @@ describe('App', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
+//#if (IncludeAuthentication)
+        { provide: AuthService, useValue: {
+          user: signal({ id: 'test-user', name: 'Test User' }),
+          error: signal(null),
+          login: vi.fn(),
+          logout: vi.fn(),
+        } },
+//#endif
 //#if (IncludeSignalR)
-        { provide: SignalrService, useValue: { notifications: signal<string[]>([]) } },
+        { provide: SignalrService, useValue: { notifications: signal<string[]>([]), error: signal(null) } },
 //#endif
       ],
     }).compileComponents();
