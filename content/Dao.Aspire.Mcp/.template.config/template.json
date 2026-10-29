@@ -74,12 +74,16 @@
           "condition": "(!IncludeDatabase)",
           "exclude": [
             "Dao.Aspire.Mcp.Data/**",
-            "Dao.Aspire.Mcp.Server/Tools/SqlAnalyticsTools.cs"
+            "Dao.Aspire.Mcp.Server/Tools/SqlAnalyticsTools.cs",
+            "Dao.Aspire.Mcp.Tests/AgenticTests/SqlAnalyticsToolsGraderTests.cs"
           ]
         },
         {
           "condition": "(!IncludeAuthentication)",
-          "exclude": ["Dao.Aspire.Mcp.Server/Tools/AuthenticatedTool.cs"]
+          "exclude": [
+            "Dao.Aspire.Mcp.Server/Tools/AuthenticatedTool.cs",
+            "Dao.Aspire.Mcp.Tests/AgenticTests/AuthenticatedToolGraderTests.cs"
+          ]
         },
         {
           "condition": "(!RequireAuthForRoles)",

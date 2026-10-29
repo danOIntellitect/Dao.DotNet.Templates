@@ -23,6 +23,9 @@
             "**/.vscode/**",
             "**/.azure/**",
             "**/node_modules/**",
+            "**/.expo/**",
+            "**/dist/**",
+            "**/coverage/**",
             "**/.expo/**"
           ]
         }

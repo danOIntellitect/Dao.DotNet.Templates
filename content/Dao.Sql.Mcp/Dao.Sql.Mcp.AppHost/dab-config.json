@@ -1,7 +1,7 @@
 {
   // For more information on configuring your DAB instance, see https://learn.microsoft.com/en-us/azure/data-api-builder/configuration/
   // For usage of the CLI tool to create and manage DAB projects, see https://learn.microsoft.com/en-us/azure/data-api-builder/command-line/
-  "$schema": "https://github.com/Azure/data-api-builder/releases/latest/download/dab.draft.schema.json",
+  "$schema": "https://github.com/Azure/data-api-builder/releases/download/v2.1.5/dab.draft.schema.json",
   "data-source": {
     "database-type": "mssql",
     "connection-string": "@env('MSSQL_CONNECTION_STRING')",
@@ -36,6 +36,7 @@
     "mcp": {
       "enabled": true,
       "path": "/mcp",
+      "allowed-hosts": [],
       "dml-tools": {
         "describe-entities": true,
         "create-record": true,
@@ -43,7 +44,8 @@
         // deleting and updating are off by default, enable if needed utilizing role based permissions at the entity level
         "update-record": false,
         "delete-record": false,
-        "execute-entity": false // execute permissions allows users to run stored procedures or functions mapped as entities in the DAB config
+        "execute-entity": false, // execute permissions allows users to run stored procedures or functions mapped as entities in the DAB config
+        "aggregate-records": false
       }
     }
     // if configured, telemetry settings will enable application insights for monitoring and diagnostics. For more information see https://learn.microsoft.com/en-us/azure/data-api-builder/configuration/runtime#telemetry-runtime

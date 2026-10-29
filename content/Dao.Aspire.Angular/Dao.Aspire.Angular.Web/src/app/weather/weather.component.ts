@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { WeatherService, WeatherForecast } from './weather.service';
 
 @Component({
@@ -36,6 +36,7 @@ import { WeatherService, WeatherForecast } from './weather.service';
       }
     </section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: `
     .weather {
       width: 100%;

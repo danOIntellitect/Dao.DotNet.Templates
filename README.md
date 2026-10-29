@@ -41,6 +41,16 @@ Full-featured .NET Aspire application with Model Context Protocol server and Bla
 
 For detailed information about each template, see the README in the respective template directory.
 
+## Validate templates
+
+The regression harness packs and installs the template package in an isolated hive, generates all six templates, builds them, runs their unit and frontend tests, and exercises the generated apps with browser and API integration tests:
+
+```powershell
+pwsh -NoProfile -File tests/Test-Templates.ps1 -Stage Test
+```
+
+This requires the .NET 10 SDK, Node.js 24, PowerShell 7, Chromium (installed by the script), and Docker for the SQL and Data API Builder integration tests. On Windows, the test stage also runs the Avalonia headless UI tests. To generate every combination of the MCP template's boolean options, add `-AllCombinations`.
+
 ## License
 
 See [LICENSE.txt](LICENSE.txt)

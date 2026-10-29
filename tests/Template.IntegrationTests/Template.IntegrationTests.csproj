@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+    <GeneratedRoot Condition="'$(GeneratedRoot)' == ''">$(MSBuildThisFileDirectory)..\..\artifacts\validation\generated</GeneratedRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.Testing" Version="13.6.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.64.1" />
+    <PackageReference Include="ModelContextProtocol" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.14" />
+    <PackageReference Include="xunit.v3.mtp-off" Version="4.0.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(GeneratedRoot)\SmokeAngular\SmokeAngular.AppHost\SmokeAngular.AppHost.csproj" />
+    <ProjectReference Include="$(GeneratedRoot)\SmokeSignalR\SmokeSignalR.AppHost\SmokeSignalR.AppHost.csproj" />
+    <ProjectReference Include="$(GeneratedRoot)\SmokeExpo\SmokeExpo.AppHost\SmokeExpo.AppHost.csproj" />
+    <ProjectReference Include="$(GeneratedRoot)\SmokeEf\SmokeEf.AppHost\SmokeEf.AppHost.csproj" />
+    <ProjectReference Include="$(GeneratedRoot)\SmokeMcp2\SmokeMcp2.AppHost\SmokeMcp2.AppHost.csproj" />
+    <ProjectReference Include="$(GeneratedRoot)\SmokeSql\SmokeSql.AppHost\SmokeSql.AppHost.csproj" />
+    <ProjectReference Include="$(GeneratedRoot)\SmokeMcp1\SmokeMcp1.Server\SmokeMcp1.Server.csproj" Aliases="AuthenticatedServer" />
+  </ItemGroup>
+</Project>

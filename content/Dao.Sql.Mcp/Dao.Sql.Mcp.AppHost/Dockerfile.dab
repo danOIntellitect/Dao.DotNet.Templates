@@ -1,5 +1,5 @@
 # Use the official Data API Builder image as base
-FROM mcr.microsoft.com/azure-databases/data-api-builder:1.7.83-rc
+FROM mcr.microsoft.com/azure-databases/data-api-builder:2.1.5
 
 # Copy the DAB configuration file into the container
 COPY dab-config.json /App/dab-config.json

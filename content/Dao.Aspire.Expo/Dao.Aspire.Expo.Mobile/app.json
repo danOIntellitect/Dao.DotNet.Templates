@@ -4,15 +4,8 @@
     "slug": "dao-aspire-expo-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
     },
     "web": {
       "bundler": "metro"

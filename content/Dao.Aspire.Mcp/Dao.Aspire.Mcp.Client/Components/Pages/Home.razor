@@ -1,7 +1,9 @@
 @page "/"
 
 @rendermode InteractiveServer
+@*#if IncludeAuthentication *@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@*#endif *@
 
 @using Dao.Aspire.Mcp.Client.Services
 @using Dao.Aspire.Mcp.Shared.Options
@@ -61,8 +63,10 @@
     [Inject]
     private McpClientService McpClientService { get; set; } = default!;
     [Inject] private ILogger<Home> Logger { get; set; } = default!;
+    @*#if IncludeAuthentication *@
     [Inject] private IOptions<AzureAdOptions> AzureAdOptions { get; set; } = default!;
     [Inject] private ITokenAcquisition TokenAcquisition { get; set; } = default!;
+    @*#endif *@
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
     [Inject]
     private Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedSessionStorage SessionStorage
@@ -108,9 +112,13 @@
         try
         {
             Logger.LogInformation("Starting to load MCP tools...");
+            @*#if IncludeAuthentication *@
             Logger.LogInformation("Acquiring access token for user...");
             string token = await TokenAcquisition.GetAccessTokenForUserAsync(AzureAdOptions.Value.Scopes);
             Logger.LogInformation("Access token acquired successfully");
+            @*#else *@
+            string token = string.Empty;
+            @*#endif *@
             Logger.LogInformation("Creating MCP client...");
             McpClient ??= await McpClientService.CreateClientAsync(token);
             Logger.LogInformation("MCP client created successfully");
@@ -119,6 +127,7 @@
             tools = await McpClient.ListToolsAsync();
             Logger.LogInformation("Successfully loaded {ToolCount} tools from MCP server", tools.Count);
         }
+        @*#if IncludeAuthentication *@
         catch (Exception ex) when
             (ex is Microsoft.Identity.Client.MsalUiRequiredException ||
             ex is MicrosoftIdentityWebChallengeUserException)
@@ -134,6 +143,7 @@
             NavigationManager.NavigateTo($"MicrosoftIdentity/Account/Challenge?redirectUri={Uri.EscapeDataString(redirectUrl)}",
             forceLoad: true);
         }
+        @*#endif *@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Failed to load MCP tools");
